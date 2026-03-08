@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { INSTRUMENTS } from '../api';
 
+type RegisterResponse = { error?: string; user?: { id: string; name: string; studentId: string; email: string; iconPath: string; isAdmin: boolean; instruments: string[]; bands: { id: string; name: string }[] } };
+
 export default function Register() {
   const [name, setName] = useState('');
   const [studentId, setStudentId] = useState('');
@@ -10,7 +12,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [instruments, setInstruments] = useState<string[]>([]);
   const [iconFile, setIconFile] = useState<File | null>(null);
-  const [iconPath, setIconPath] = useState('');
+  const [, setIconPath] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -32,8 +34,9 @@ export default function Register() {
     } catch {
       throw new Error('サーバーに接続できません。バックエンド（API）が起動しているか確認してください。');
     }
-    if (!res.ok) throw new Error(data.error || 'アップロード失敗');
-    return data.iconPath;
+    const payload = data as { error?: string; iconPath?: string };
+    if (!res.ok) throw new Error(payload.error || 'アップロード失敗');
+    return payload.iconPath;
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -65,7 +68,7 @@ export default function Register() {
         }),
       });
       const text = await res.text();
-      let data = {};
+      let data: RegisterResponse = {};
       try {
         data = text ? JSON.parse(text) : {};
       } catch {
@@ -76,7 +79,7 @@ export default function Register() {
         setError(data.error || '登録に失敗しました');
         return;
       }
-      setUser(data.user);
+      if (data.user) setUser(data.user);
       await fetchUser();
       navigate('/');
     } catch (err) {

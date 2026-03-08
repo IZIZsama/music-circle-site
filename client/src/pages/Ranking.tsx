@@ -6,9 +6,9 @@ import { api } from '../api';
 type RankEntry = { user?: { id: string; name: string; iconPath: string }; band?: { id: string; name: string }; score: number };
 
 export default function Ranking() {
-  const { user } = useAuth();
+  useAuth();
   const [period, setPeriod] = useState<'this_month' | 'last_30_days' | 'total'>('this_month');
-  const [type, setType] = useState<'user' | 'band'>('user');
+  const [type] = useState<'user' | 'band'>('user');
   const [userRanking, setUserRanking] = useState<RankEntry[]>([]);
   const [bandRanking, setBandRanking] = useState<RankEntry[]>([]);
   const [myScore, setMyScore] = useState<RankEntry | null>(null);

@@ -19,7 +19,7 @@ export default function DayDetail() {
   const { date } = useParams<{ date: string }>();
   const { user } = useAuth();
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [bands, setBands] = useState<{ id: string; name: string }[]>([]);
+  const [, setBands] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
