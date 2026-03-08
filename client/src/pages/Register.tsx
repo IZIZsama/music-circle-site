@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { INSTRUMENTS } from '../api';
 
+/** Register page: form state and API response are typed for strict TS build */
 type RegisterResponse = { error?: string; user?: { id: string; name: string; studentId: string; email: string; iconPath: string; isAdmin: boolean; instruments: string[]; bands: { id: string; name: string }[] } };
 
 export default function Register() {
