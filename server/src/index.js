@@ -1,4 +1,5 @@
 import './env.js';
+import './mysql.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
