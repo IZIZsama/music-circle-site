@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { INSTRUMENTS } from '../api';
+import { buildApiUrl, INSTRUMENTS } from '../api';
 
 /** Register page: form state and API response are typed for strict TS build */
 type RegisterResponse = { error?: string; user?: { id: string; name: string; studentId: string; email: string; iconPath: string; isAdmin: boolean; instruments: string[]; bands: { id: string; name: string }[] } };
@@ -23,7 +23,7 @@ export default function Register() {
     if (!iconFile) return null;
     const form = new FormData();
     form.append('icon', iconFile);
-    const res = await fetch('/api/users/upload-icon', {
+    const res = await fetch(buildApiUrl('/api/users/upload-icon'), {
       method: 'POST',
       credentials: 'include',
       body: form,
@@ -55,7 +55,7 @@ export default function Register() {
         if (!uploaded) throw new Error('アイコンのアップロードに失敗しました');
         path = uploaded;
       }
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(buildApiUrl('/api/auth/register'), {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

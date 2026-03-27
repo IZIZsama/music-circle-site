@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { buildApiUrl } from '../api';
 
 type User = {
   id: string;
@@ -26,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchUser = async () => {
     try {
-      const res = await fetch('/api/auth/me', { credentials: 'include' });
+      const res = await fetch(buildApiUrl('/api/auth/me'), { credentials: 'include' });
       if (res.ok) {
         const data = await res.json();
         setUser(data.user);

@@ -1,12 +1,13 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { buildApiUrl } from '../api';
 
 export default function Layout() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    await fetch(buildApiUrl('/api/auth/logout'), { method: 'POST', credentials: 'include' });
     navigate('/login');
     window.location.reload();
   };

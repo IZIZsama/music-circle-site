@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { buildApiUrl } from '../api';
 
 export default function Login() {
   const [loginId, setLoginId] = useState('');
@@ -15,7 +16,7 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(buildApiUrl('/api/auth/login'), {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

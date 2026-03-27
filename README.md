@@ -92,3 +92,16 @@ npm run dev
 ## ライセンス
 
 MIT
+
+## デプロイ最小構成（Railway + Vercel）
+
+- Railway は `server` を Root Directory に設定
+- Railway の環境変数:
+  - `CLIENT_ORIGIN=https://<your-vercel-domain>`
+  - `SESSION_SECRET=<strong-random-secret>`
+- Railway の Build Command（推奨）:
+  - `npm ci && npx prisma generate && npx prisma db push`
+- Railway の Start Command:
+  - `npm start`
+- Vercel は `client` をデプロイし、環境変数:
+  - `VITE_API_BASE_URL=https://<your-railway-domain>`

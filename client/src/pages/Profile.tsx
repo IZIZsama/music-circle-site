@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { api, INSTRUMENTS } from '../api';
+import { api, buildApiUrl, INSTRUMENTS } from '../api';
 
 export default function Profile() {
   const { user, fetchUser } = useAuth();
@@ -52,7 +52,7 @@ export default function Profile() {
     if (!iconFile) return iconPath || null;
     const form = new FormData();
     form.append('icon', iconFile);
-    const res = await fetch('/api/users/upload-icon', {
+    const res = await fetch(buildApiUrl('/api/users/upload-icon'), {
       method: 'POST',
       credentials: 'include',
       body: form,

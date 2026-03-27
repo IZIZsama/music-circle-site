@@ -1,7 +1,13 @@
-const base = '';
+const rawBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim() || '';
+const base = rawBase.replace(/\/+$/, '');
+
+export function buildApiUrl(path: string) {
+  if (!path.startsWith('/')) return `${base}/${path}`;
+  return `${base}${path}`;
+}
 
 export async function api(path: string, options: RequestInit = {}) {
-  const res = await fetch(base + path, {
+  const res = await fetch(buildApiUrl(path), {
     ...options,
     credentials: 'include',
     headers: {
