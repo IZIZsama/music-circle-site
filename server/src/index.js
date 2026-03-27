@@ -26,19 +26,13 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 3001;
 const isProduction = process.env.NODE_ENV === 'production';
-const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+const rawClientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
+const corsOrigin = rawClientOrigin.includes(',')
+  ? rawClientOrigin.split(',').map((o) => o.trim())
+  : rawClientOrigin;
 
 app.use(cors({
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-      return;
-    }
-    callback(new Error(`CORS blocked for origin: ${origin}`));
-  },
+  origin: corsOrigin,
   credentials: true,
 }));
 app.use(express.json());
