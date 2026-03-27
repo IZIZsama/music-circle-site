@@ -22,18 +22,39 @@ import adminRoutes from './routes/admin.js';
 const prisma = new PrismaClient();
 const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 3001;
+const isProduction = process.env.NODE_ENV === 'production';
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true,
 }));
 app.use(express.json());
 app.use(cookieParser());
+if (isProduction) {
+  // Railway のプロキシ配下で secure cookie を有効にするために必要
+  app.set('trust proxy', 1);
+}
 app.use(session({
   secret: process.env.SESSION_SECRET || 'band-practice-secret-change-in-production',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 },
+  proxy: isProduction,
+  cookie: {
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  },
 }));
 
 const uploadsPath = path.join(__dirname, '..', 'uploads');

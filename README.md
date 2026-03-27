@@ -97,11 +97,15 @@ MIT
 
 - Railway は `server` を Root Directory に設定
 - Railway の環境変数:
-  - `CLIENT_ORIGIN=https://<your-vercel-domain>`
+  - `CLIENT_ORIGIN=https://<your-vercel-domain>`（複数指定する場合はカンマ区切り）
   - `SESSION_SECRET=<strong-random-secret>`
+  - `NODE_ENV=production`
 - Railway の Build Command（推奨）:
   - `npm ci && npx prisma generate && npx prisma db push`
 - Railway の Start Command:
   - `npm start`
 - Vercel は `client` をデプロイし、環境変数:
   - `VITE_API_BASE_URL=https://<your-railway-domain>`
+- 本番URL例:
+  - Vercel: `https://music-circle-site.vercel.app`
+  - Railway API: `https://music-circle-site-production.up.railway.app`

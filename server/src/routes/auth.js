@@ -96,13 +96,18 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { studentId, password, login } = req.body;
-    const loginId = login ?? studentId;
+    const loginId = String(login ?? studentId ?? '').trim();
     if (!loginId || !password) {
       return res.status(400).json({ error: '学籍番号（またはメール）とパスワードを入力してください' });
     }
-    const isEmail = String(loginId).includes('@');
     const user = await prisma.user.findFirst({
-      where: isEmail ? { email: loginId } : { studentId: loginId },
+      // 学籍番号またはメールアドレスの実在カラムへ OR 検索
+      where: {
+        OR: [
+          { studentId: loginId },
+          { email: loginId },
+        ],
+      },
       include: { bands: { include: { band: true } } },
     });
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
