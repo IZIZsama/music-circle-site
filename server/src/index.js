@@ -4,8 +4,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-// DBパスを絶対パスに（どこから起動しても server/prisma/dev.db を参照）
-process.env.DATABASE_URL = process.env.DATABASE_URL || ('file:' + path.join(__dirname, '..', 'prisma', 'dev.db').replace(/\\/g, '/'));
+if (!process.env.DATABASE_URL) {
+  console.error('DATABASE_URL is not set.');
+  console.error('Railway MySQL の接続文字列を DATABASE_URL に設定してください。');
+  process.exit(1);
+}
 
 import express from 'express';
 import cors from 'cors';
